@@ -1,0 +1,298 @@
+<a href="#" class="bold addIndex"><i class="icon16 add"></i>Новый индекс</a>
+<div class="settings-wrapper">
+	{$ind_counter = 0}
+	{$mat_counter = 0}
+	{$des_counter = 0}
+	{$feat_counter = 0}
+	{foreach $cs as $ind => $materials}
+		{$ind_counter = $ind_counter + 1}
+		<div class="settings-index-wrapper">
+			<div class="ind-sorter"></div>
+			<span class="index-name">Индекс</span><input type="text" name="index-name" value="{$ind|escape}" el_num="{$ind_counter}">
+			<a href="#" class="bold cloneIndex"><i class="icon16 add"></i>Клонировать индекс</a>
+			<a class="delete-index" href="#"><i class="icon16 delete"></i></a>
+			{foreach $materials as $mat => $designs}
+				{$mat_counter = $mat_counter + 1}
+				<div class="settings-material-wrapper">
+					<div class="mat-sorter"></div>
+					<a href="#" class="bold addMaterial"><i class="icon16 add"></i>Добавить материал</a>
+					<span class="material-name">Материал</span><input type="text" name="material-name" value="{$mat|escape}" el_num="{$mat_counter}">
+					<a href="#" class="bold cloneMaterial"><i class="icon16 add"></i>Клонировать материал</a>
+					<a class="delete-material" href="#"><i class="icon16 delete"></i></a>
+					{foreach $designs as $des => $features}
+						{$des_counter = $des_counter + 1}
+						<div class="settings-design-wrapper">
+						<div class="des-sorter"></div>
+							<a href="#" class="bold addDesign"><i class="icon16 add"></i>Добавить дизайн</a>
+							
+							<span class="design-name">Дизайн</span><input type="text" name="design-name" value="{$des|escape}" el_num="{$des_counter}">
+							<a class="delete-design" href="#"><i class="icon16 delete"></i></a>
+							<div class="settings-features-wrapper">
+								<a href="#" class="bold addFeature"><i class="icon16 add"></i>Добавить свойство</a>
+								{foreach $features as $feat => $params}
+								{$feat_counter = $feat_counter + 1}
+									{*print_r($features)*}
+									<div class="settings-feat-wrapper" draggable="true">
+										<div class="sorter"></div>
+										<span class="feat-name" el_num="{$feat_counter}"> Св-во</span><input type="text" name="feat-name" value="{$params.feature|escape}" el_num="{$feat_counter}">
+										<span class="feat-name" el_num="{$feat_counter}">Значене от</span><input type="text" name="feat-from" value="{$params.val_from|escape}" el_num="{$feat_counter}">
+										<span class="feat-name" el_num="{$feat_counter}">Значение до</span><input type="text" name="feat-to" value="{$params.val_to|escape}" el_num="{$feat_counter}">
+										<span class="feat-name" el_num="{$feat_counter}">Значение шаг</span><input type="text" name="feat-step" value="{$params.val_step|escape}" el_num="{$feat_counter}">
+										<span class="feat-name" el_num="{$feat_counter}">Цена</span><input type="text" name="feat-price" value="{$params.price|escape}" el_num="{$feat_counter}">
+										<input type="hidden" name="feat-sort" value="{$feat_counter}">
+										<a class="delete-feature" href="#"><i class="icon16 delete"></i></a>
+									</div>
+								{/foreach}
+							</div>	
+						</div>
+					{/foreach}
+				</div>	
+			{/foreach}
+		</div>
+	{/foreach}
+	<div class="bot-panel" style="display: block;">
+            <div class="block bordered-top">
+                <input type="submit" class="button green" value="Сохранить" id="conf-settings-save-button">
+				<span class="hint">Индексы/Материалы/Дизайны, для которых не указано ни одного Свойства сохранены не будут!</span>
+            </div>
+        </div>
+</div>
+{literal}
+<style>
+.settings-index-wrapper{background:#999;}
+.settings-material-wrapper{background:#fff;}
+.settings-design-wrapper{background:#ccc;border-top: 1px solid black;border-bottom: 1px solid black;}
+.settings-index-wrapper,.settings-material-wrapper,.settings-design-wrapper,settings-features-wrapper,settings-feat-wrapper{padding:20px;}
+.bot-panel{
+	position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 0 10px;
+    box-shadow: 0 -6px 10px -10px #AAAAAA;
+    z-index: 1052;
+}
+.icon16.delete {
+    float: right;
+}
+.settings-index-wrapper:last-child{margin-bottom: 80px;}
+
+.input-error{
+	border: 2px solid red;
+    background: #f5d6d6;
+}
+.sorter, .des-sorter, .mat-sorter, .ind-sorter { width:20px; height:20px; background:green;display: inline-block; } 
+.des-sorter{background:blue;}
+.mat-sorter{background:yellow;}
+.ind-sorter{background:red;}
+</style>
+{/literal}
+<script>
+
+	$('.settings-features-wrapper').each(function(){ 
+		$(this).sortable( { 
+			handle:".sorter",
+			items:".settings-feat-wrapper",
+			update: function(){
+				var count = 0;
+				$('input[name=feat-sort]').each(function(){ $(this).val(count+1); count++} );
+			}
+		})
+	});
+	
+	$('.settings-material-wrapper').each(function(){ 
+		$(this).sortable( { 
+			handle:".des-sorter",
+			items:".settings-design-wrapper",			
+			update: function(){
+				var count = 0;
+				$('input[name=feat-sort]').each(function(){ $(this).val(count+1); count++} );
+			}
+		})
+	});
+	
+	$('.settings-index-wrapper').each(function(){ 
+		$(this).sortable( { 
+			handle:".mat-sorter",
+			items:".settings-material-wrapper",				
+			update: function(){
+				var count = 0;
+				$('input[name=feat-sort]').each(function(){ $(this).val(count+1); count++} );
+			}
+		})
+	});
+	
+	$('.settings-wrapper').each(function(){ 
+		$(this).sortable( { 
+			handle:".ind-sorter",
+			items:".settings-index-wrapper",				
+			update: function(){
+				var count = 0;
+				$('input[name=feat-sort]').each(function(){ $(this).val(count+1); count++} );
+			}
+		})
+	});
+	
+	function updateSorting(){
+		var count = 0;
+		$('input[name=feat-sort]').each(function(){ $(this).val(count+1); count++} );
+	}
+	
+	$('body').on('click','.addIndex',function(e){
+		e.preventDefault();
+		var new_num = $('input[name=index-name]').length+1;
+		var indexBlank = '<div class="settings-index-wrapper"><span class="index-name">Индекс</span><input type="text" name="index-name" el_num="'+new_num+'"><a class="delete-index" href="#"><i class="icon16 delete"></i></a><div class="settings-material-wrapper"><a href="#" class="bold addMaterial"><i class="icon16 add"></i>Добавить материал</a></div></div>';	
+		$(this).parent().find('.settings-wrapper').append(indexBlank);
+	});
+	
+	$('body').on('click','.cloneIndex',function(e){
+		e.preventDefault();
+		var clone = $(this).parent('.settings-index-wrapper').clone();
+		$('.settings-wrapper').append(clone);
+		var addedIndex = $('.settings-wrapper').find('.settings-index-wrapper').last();
+		var indexNum = $('input[name=index-name]').length - $(addedIndex).find('input[name=index-name]').length + 1;
+		var materialNum = $('input[name=material-name]').length - $(addedIndex).find('input[name=material-name]').length+1;
+		var designNum = $('input[name=design-name]').length - $(addedIndex).find('input[name=design-name]').length+1;
+		var featNum = $('input[name=feat-name]').length - $(addedIndex).find('input[name=feat-name]').length+1;
+		
+		$(addedIndex).find('input[name=index-name]').each(function(){
+			$(this).attr('el_num',indexNum);
+			indexNum = indexNum + 1;
+		});
+		$(addedIndex).find('input[name=material-name]').each(function(){
+			$(this).attr('el_num',materialNum);
+			materialNum = materialNum + 1;
+		});
+		$(addedIndex).find('input[name=design-name]').each(function(){
+			$(this).attr('el_num',designNum);
+			designNum = designNum + 1;
+		});
+		$(addedIndex).find('input[name=feat-name]').each(function(){
+			$(this).attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-from]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-to]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-step]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-price]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-sort]').val(featNum);
+			featNum = featNum + 1;
+		});
+	});
+	
+	$('body').on('click','.addMaterial',function(e){
+		e.preventDefault();
+		var new_num = $('input[name=material-name]').length+1;
+		var materialBlank = '<div class="settings-material-wrapper"><span class="index-name">Материал</span><input type="text" name="material-name" el_num="'+new_num+'"><a class="delete-material" href="#"><i class="icon16 delete"></i></a><div class="settings-design-wrapper"><a href="#" class="bold addDesign"><i class="icon16 add"></i>Добавить дизайн</a</div>	</div>';	
+		$(this).closest('.settings-index-wrapper').append(materialBlank);
+	});
+	
+	$('body').on('click','.cloneMaterial',function(e){
+		e.preventDefault();
+		var clone = $(this).parent('.settings-material-wrapper').clone();
+		$(this).parent('.settings-material-wrapper').parent('.settings-index-wrapper').append(clone);
+		var addedMaterial = $(this).parent('.settings-material-wrapper').parent('.settings-index-wrapper').find('.settings-material-wrapper').last();
+		
+		var materialNum = $('input[name=material-name]').length - $(addedMaterial).find('input[name=material-name]').length+1;
+		var designNum = $('input[name=design-name]').length - $(addedMaterial).find('input[name=design-name]').length+1;
+		var featNum = $('input[name=feat-name]').length - $(addedMaterial).find('input[name=feat-name]').length+1;
+		
+
+		$(addedMaterial).find('input[name=material-name]').each(function(){
+			$(this).attr('el_num',materialNum);
+			materialNum = materialNum + 1;
+		});
+		$(addedMaterial).find('input[name=design-name]').each(function(){
+			$(this).attr('el_num',designNum);
+			designNum = designNum + 1;
+		});
+		$(addedMaterial).find('input[name=feat-name]').each(function(){
+			$(this).attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-from]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-to]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-step]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-price]').attr('el_num',featNum);
+			$(this).parent().find('input[name=feat-sort]').val(featNum);
+			featNum = featNum + 1;
+		});
+	});
+	
+	
+	$('body').on('click','.addDesign',function(e){
+		e.preventDefault();
+		var new_num = $('input[name=design-name]').length+1;
+		var designBlank = '<div class="settings-design-wrapper"><span class="index-name">Дизайн</span><input type="text" name="design-name" el_num="'+new_num+'"><a class="delete-design" href="#"><i class="icon16 delete"></i></a><div class="settings-features-wrapper"><a href="#" class="bold addFeature"><i class="icon16 add"></i>Добавить свойство</a></div></div>';	
+		$(this).closest('.settings-material-wrapper').append(designBlank);
+	});
+	
+	$('body').on('click','.addFeature',function(e){
+		e.preventDefault();
+		var new_num = $('input[name=feat-name]').length+1;
+		var featBlank = '<div class="settings-feat-wrapper"><span class="feat-name" el_num="'+new_num+'">Св-во</span><input type="text" name="feat-name" el_num="'+new_num+'"><span class="index-name">Значене от</span><input type="text" name="feat-from"><span class="index-name">Значение до</span><input type="text" name="feat-to"><span class="index-name">Значение шаг</span><input type="text" name="feat-step"><span class="index-name">Цена</span><input type="text" name="feat-price"><input type="hidden" name="feat-sort" value="'+new_num+'"><a class="delete-feature" href="#"><i class="icon16 delete"></i></a></div>';
+		$(this).parent('.settings-features-wrapper').append(featBlank);
+	});
+	
+	$('body').on('click','.delete-index',function(e){
+		e.preventDefault();
+		$(this).parent('.settings-index-wrapper').remove();
+	});
+	$('body').on('click','.delete-material',function(e){
+		e.preventDefault();
+		$(this).parent('.settings-material-wrapper').remove();
+	});
+	$('body').on('click','.delete-design',function(e){
+		e.preventDefault();
+		$(this).parent('.settings-design-wrapper').remove();
+	});
+	$('body').on('click','.delete-feature',function(e){
+		e.preventDefault();
+		$(this).parent('.settings-feat-wrapper').remove();
+	});
+	$('body').on('click','#conf-settings-save-button',function(e){
+		e.preventDefault();
+		var formeddata = {};
+		$("input[name=index-name]").each(function(){
+			var ind = $(this).val();
+			var ind_elnum = $(this).attr('el_num');
+			$(this).parent().find("input[name=material-name]").each(function(){
+				var mat = $(this).val();
+				var mat_elnum = $(this).attr('el_num');
+				$(this).parent().find("input[name=design-name]").each(function(){
+					var des = $(this).val();	
+					var des_elnum = $(this).attr('el_num');					
+					$(this).parent().find(".settings-feat-wrapper").each(function(){							
+						line_elnum = $(this).find("input[name=feat-name]").attr('el_num');							
+						var line = {};
+						line['ind'] = ind;
+						line['material'] = mat;
+						line['design'] = des;
+						line['feature'] = $(this).find("input[name=feat-name]").val();
+						line['val_from'] = $(this).find("input[name=feat-from]").val();
+						line['val_to'] = $(this).find("input[name=feat-to]").val();
+						line['val_step'] = $(this).find("input[name=feat-step]").val();
+						line['price'] = $(this).find("input[name=feat-price]").val();
+						line['sort'] = $(this).find("input[name=feat-sort]").val();
+						var formed_key = ind_elnum + '_' + mat_elnum + '_' + des_elnum + '_' + line_elnum;
+						formeddata[formed_key] = line;
+					});
+				});
+			});
+		});
+		var saveOkFlag = true;
+		$("input[type=text]").each(function(){
+			if(!$(this).val()){
+				saveOkFlag = false;
+				$(this).addClass("input-error");
+			}
+		});
+		
+		$("body").on("change","input[type=text]",function(){
+			if($(this).hasClass("input-error")){ $(this).removeClass("input-error");}
+		});
+		
+		if(saveOkFlag){
+			$.post( "webasyst/lenscalc/saveconf/", formeddata, function( data ) {});
+		}else{
+			alert("Не все поля заполнены, проверьте значения выделенных полей!");
+		}
+	});
+</script>

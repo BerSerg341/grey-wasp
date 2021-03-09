@@ -1,0 +1,32 @@
+
+<h3 style="margin-top:10px"><span class="gray">Параметры линз</span> <strong></strong></h3>
+{$R_Head_TD = "<tr><td>type</td>"}
+{$R_Body_TD = "<tr><td>OD</td>"}
+{$L_Head_TD = "<tr><td>type</td>"}
+{$L_Body_TD = "<tr><td>OC</td>"}
+
+{foreach $calc_params as $k => $v}
+
+	{if strpos($k, 'R_') !== false}
+		{$key = $k|trim:'R_'}
+		{$R_Head_TD = $R_Head_TD|cat:"<td>$key</td>"}
+		{$R_Body_TD = $R_Body_TD|cat:"<td>$v</td>"}
+	{/if}
+	{if strpos($k, 'L_') !== false}
+		{$key = $k|trim:'L_'}
+		{$L_Head_TD = $L_Head_TD|cat:"<td>$key</td>"}
+		{$L_Body_TD = $L_Body_TD|cat:"<td>$v</td>"}
+	{/if}
+	
+{/foreach}
+{$R_Head_TD = $R_Head_TD|cat:"</tr>"}
+{$R_Body_TD = $R_Body_TD|cat:"</tr>"}
+{$L_Head_TD = $L_Head_TD|cat:"</tr>"}
+{$L_Body_TD = $L_Body_TD|cat:"</tr>"}
+<table class="zebra single-lined">
+	{$R_Head_TD}
+	{$R_Body_TD}
+	{$L_Head_TD}
+	{$L_Body_TD}
+</table>
+

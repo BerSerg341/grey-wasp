@@ -1,0 +1,222 @@
+{if $wa->user()->isAuth()}
+<form id="cart-form" method="post" action="/cart/add/">
+    <div class="purchase"> 
+		{if $services}
+        <!-- services -->
+        <div class="services">
+            {foreach $services as $s}
+            <div class="service-{$s.id}">
+                <label>
+                    <input data-price="{shop_currency($s.price, $s.currency, null, 0)}" type="checkbox" name="services[]" value="{$s.id}"> {$s.name|escape} {if $s.price && !isset($s.variants)}(+<span class="service-price">{shop_currency_html($s.price, $s.currency)}</span>){/if}
+                </label>
+                {if isset($s.variants)}
+                <select data-variant-id="{$s.variant_id}" class="service-variants" name="service_variant[{$s.id}]" disabled>
+                    {foreach $s.variants as $v}
+                    <option {if $s.variant_id == $v.id}selected{/if} data-price="{shop_currency($v.price, $s.currency, null, 0)}" value="{$v.id}">{$v.name|escape} (+{shop_currency($v.price, $s.currency)})</option>
+                    {/foreach}
+                </select>
+                {else}
+                <input type="hidden" name="service_variant[{$s.id}]" value="{$s.variant_id}">
+                {/if}
+            </div>
+            {/foreach}
+        </div>
+        {/if}
+        <!-- price -->
+        <div class="add2cart">			
+			<input type="checkbox" id="duplicate" name="duplicate" checked>
+			<label for="duplicate">Дублировать параметры</label>
+			</br>
+			</br>
+			<div class="pick_params pick_params_left" style="display:block;margin-bottom:20px;">
+				<span style="width:200px;">Левая</span>				
+					<span>Индекс</span>
+					<select name="{'L_'|cat:'index'}" interact="index" data-call="material">
+						<option></option>
+						{foreach $output.values as $k => $v}
+							{foreach $v as $sk => $sv}
+								<option>{$sv}</option>
+							{/foreach}
+						{/foreach}
+					</select>				
+			</div>
+			<div class="pick_params pick_params_right" style="display:block">
+				<span style="width:200px;">Правая</span>			
+				<span>Индекс</span>
+				<select name="{'R_'|cat:'index'}" interact="index" data-call="material">
+					<option></option>
+					{foreach $output.values as $k => $v}
+						{foreach $v as $sk => $sv}
+							<option>{$sv}</option>
+						{/foreach}
+					{/foreach}
+				</select>
+			</div>
+
+            <span data-price="0" class="price nowrap">0 <span class="ruble">Р</span></span>
+            <input type="hidden" name="product_id" value="15">
+            
+            {*<input type="submit" value="Купить">*}
+
+			{shopStorequickorderPlugin::product_button()}
+			
+			{*css файл есть в нетворке, но почему-то не используется, пока так*}
+			{literal}
+			<style>
+				.select2-container{box-sizing:border-box;display:inline-block;margin:0;position:relative;vertical-align:middle}.select2-container .select2-selection--single{box-sizing:border-box;cursor:pointer;display:block;height:28px;user-select:none;-webkit-user-select:none}.select2-container .select2-selection--single .select2-selection__rendered{display:block;padding-left:8px;padding-right:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.select2-container .select2-selection--single .select2-selection__clear{background-color:transparent;border:none;font-size:1em}.select2-container[dir="rtl"] .select2-selection--single .select2-selection__rendered{padding-right:8px;padding-left:20px}.select2-container .select2-selection--multiple{box-sizing:border-box;cursor:pointer;display:block;min-height:32px;user-select:none;-webkit-user-select:none}.select2-container .select2-selection--multiple .select2-selection__rendered{display:inline;list-style:none;padding:0}.select2-container .select2-selection--multiple .select2-selection__clear{background-color:transparent;border:none;font-size:1em}.select2-container .select2-search--inline .select2-search__field{box-sizing:border-box;border:none;font-size:100%;margin-top:5px;margin-left:5px;padding:0;max-width:100%;resize:none;height:18px;vertical-align:bottom;font-family:sans-serif;overflow:hidden;word-break:keep-all}.select2-container .select2-search--inline .select2-search__field::-webkit-search-cancel-button{-webkit-appearance:none}.select2-dropdown{background-color:white;border:1px solid #aaa;border-radius:4px;box-sizing:border-box;display:block;position:absolute;left:-100000px;width:100%;z-index:1051}.select2-results{display:block}.select2-results__options{list-style:none;margin:0;padding:0}.select2-results__option{padding:6px;user-select:none;-webkit-user-select:none}.select2-results__option--selectable{cursor:pointer}.select2-container--open .select2-dropdown{left:0}.select2-container--open .select2-dropdown--above{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.select2-container--open .select2-dropdown--below{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.select2-search--dropdown{display:block;padding:4px}.select2-search--dropdown .select2-search__field{padding:4px;width:100%;box-sizing:border-box}.select2-search--dropdown .select2-search__field::-webkit-search-cancel-button{-webkit-appearance:none}.select2-search--dropdown.select2-search--hide{display:none}.select2-close-mask{border:0;margin:0;padding:0;display:block;position:fixed;left:0;top:0;min-height:100%;min-width:100%;height:auto;width:auto;opacity:0;z-index:99;background-color:#fff;filter:alpha(opacity=0)}.select2-hidden-accessible{border:0 !important;clip:rect(0 0 0 0) !important;-webkit-clip-path:inset(50%) !important;clip-path:inset(50%) !important;height:1px !important;overflow:hidden !important;padding:0 !important;position:absolute !important;width:1px !important;white-space:nowrap !important}.select2-container--default .select2-selection--single{background-color:#fff;border:1px solid #aaa;border-radius:4px}.select2-container--default .select2-selection--single .select2-selection__rendered{color:#444;line-height:28px}.select2-container--default .select2-selection--single .select2-selection__clear{cursor:pointer;float:right;font-weight:bold;height:26px;margin-right:20px;padding-right:0px}.select2-container--default .select2-selection--single .select2-selection__placeholder{color:#999}.select2-container--default .select2-selection--single .select2-selection__arrow{height:26px;position:absolute;top:1px;right:1px;width:20px}.select2-container--default .select2-selection--single .select2-selection__arrow b{border-color:#888 transparent transparent transparent;border-style:solid;border-width:5px 4px 0 4px;height:0;left:50%;margin-left:-4px;margin-top:-2px;position:absolute;top:50%;width:0}.select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__clear{float:left}.select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__arrow{left:1px;right:auto}.select2-container--default.select2-container--disabled .select2-selection--single{background-color:#eee;cursor:default}.select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__clear{display:none}.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b{border-color:transparent transparent #888 transparent;border-width:0 4px 5px 4px}.select2-container--default .select2-selection--multiple{background-color:white;border:1px solid #aaa;border-radius:4px;cursor:text;padding-bottom:5px;padding-right:5px;position:relative}.select2-container--default .select2-selection--multiple.select2-selection--clearable{padding-right:25px}.select2-container--default .select2-selection--multiple .select2-selection__clear{cursor:pointer;font-weight:bold;height:20px;margin-right:10px;margin-top:5px;position:absolute;right:0;padding:1px}.select2-container--default .select2-selection--multiple .select2-selection__choice{background-color:#e4e4e4;border:1px solid #aaa;border-radius:4px;box-sizing:border-box;display:inline-block;margin-left:5px;margin-top:5px;padding:0;padding-left:20px;position:relative;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;white-space:nowrap}.select2-container--default .select2-selection--multiple .select2-selection__choice__display{cursor:default;padding-left:2px;padding-right:5px}.select2-container--default .select2-selection--multiple .select2-selection__choice__remove{background-color:transparent;border:none;border-right:1px solid #aaa;border-top-left-radius:4px;border-bottom-left-radius:4px;color:#999;cursor:pointer;font-size:1em;font-weight:bold;padding:0 4px;position:absolute;left:0;top:0}.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus{background-color:#f1f1f1;color:#333;outline:none}.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice{margin-left:5px;margin-right:auto}.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice__display{padding-left:5px;padding-right:2px}.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove{border-left:1px solid #aaa;border-right:none;border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:4px;border-bottom-right-radius:4px}.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__clear{float:left;margin-left:10px;margin-right:auto}.select2-container--default.select2-container--focus .select2-selection--multiple{border:solid black 1px;outline:0}.select2-container--default.select2-container--disabled .select2-selection--multiple{background-color:#eee;cursor:default}.select2-container--default.select2-container--disabled .select2-selection__choice__remove{display:none}.select2-container--default.select2-container--open.select2-container--above .select2-selection--single,.select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple{border-top-left-radius:0;border-top-right-radius:0}.select2-container--default.select2-container--open.select2-container--below .select2-selection--single,.select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple{border-bottom-left-radius:0;border-bottom-right-radius:0}.select2-container--default .select2-search--dropdown .select2-search__field{border:1px solid #aaa}.select2-container--default .select2-search--inline .select2-search__field{background:transparent;border:none;outline:0;box-shadow:none;-webkit-appearance:textfield}.select2-container--default .select2-results>.select2-results__options{max-height:200px;overflow-y:auto}.select2-container--default .select2-results__option .select2-results__option{padding-left:1em}.select2-container--default .select2-results__option .select2-results__option .select2-results__group{padding-left:0}.select2-container--default .select2-results__option .select2-results__option .select2-results__option{margin-left:-1em;padding-left:2em}.select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option{margin-left:-2em;padding-left:3em}.select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option{margin-left:-3em;padding-left:4em}.select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option{margin-left:-4em;padding-left:5em}.select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option{margin-left:-5em;padding-left:6em}.select2-container--default .select2-results__option--group{padding:0}.select2-container--default .select2-results__option--disabled{color:#999}.select2-container--default .select2-results__option--selected{background-color:#ddd}.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{background-color:#5897fb;color:white}.select2-container--default .select2-results__group{cursor:default;display:block;padding:6px}.select2-container--classic .select2-selection--single{background-color:#f7f7f7;border:1px solid #aaa;border-radius:4px;outline:0;background-image:-webkit-linear-gradient(top, #fff 50%, #eee 100%);background-image:-o-linear-gradient(top, #fff 50%, #eee 100%);background-image:linear-gradient(to bottom, #fff 50%, #eee 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0)}.select2-container--classic .select2-selection--single:focus{border:1px solid #5897fb}.select2-container--classic .select2-selection--single .select2-selection__rendered{color:#444;line-height:28px}.select2-container--classic .select2-selection--single .select2-selection__clear{cursor:pointer;float:right;font-weight:bold;height:26px;margin-right:20px}.select2-container--classic .select2-selection--single .select2-selection__placeholder{color:#999}.select2-container--classic .select2-selection--single .select2-selection__arrow{background-color:#ddd;border:none;border-left:1px solid #aaa;border-top-right-radius:4px;border-bottom-right-radius:4px;height:26px;position:absolute;top:1px;right:1px;width:20px;background-image:-webkit-linear-gradient(top, #eee 50%, #ccc 100%);background-image:-o-linear-gradient(top, #eee 50%, #ccc 100%);background-image:linear-gradient(to bottom, #eee 50%, #ccc 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFCCCCCC', GradientType=0)}.select2-container--classic .select2-selection--single .select2-selection__arrow b{border-color:#888 transparent transparent transparent;border-style:solid;border-width:5px 4px 0 4px;height:0;left:50%;margin-left:-4px;margin-top:-2px;position:absolute;top:50%;width:0}.select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__clear{float:left}.select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__arrow{border:none;border-right:1px solid #aaa;border-radius:0;border-top-left-radius:4px;border-bottom-left-radius:4px;left:1px;right:auto}.select2-container--classic.select2-container--open .select2-selection--single{border:1px solid #5897fb}.select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow{background:transparent;border:none}.select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow b{border-color:transparent transparent #888 transparent;border-width:0 4px 5px 4px}.select2-container--classic.select2-container--open.select2-container--above .select2-selection--single{border-top:none;border-top-left-radius:0;border-top-right-radius:0;background-image:-webkit-linear-gradient(top, #fff 0%, #eee 50%);background-image:-o-linear-gradient(top, #fff 0%, #eee 50%);background-image:linear-gradient(to bottom, #fff 0%, #eee 50%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0)}.select2-container--classic.select2-container--open.select2-container--below .select2-selection--single{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0;background-image:-webkit-linear-gradient(top, #eee 50%, #fff 100%);background-image:-o-linear-gradient(top, #eee 50%, #fff 100%);background-image:linear-gradient(to bottom, #eee 50%, #fff 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFFFFFFF', GradientType=0)}.select2-container--classic .select2-selection--multiple{background-color:white;border:1px solid #aaa;border-radius:4px;cursor:text;outline:0;padding-bottom:5px;padding-right:5px}.select2-container--classic .select2-selection--multiple:focus{border:1px solid #5897fb}.select2-container--classic .select2-selection--multiple .select2-selection__clear{display:none}.select2-container--classic .select2-selection--multiple .select2-selection__choice{background-color:#e4e4e4;border:1px solid #aaa;border-radius:4px;display:inline-block;margin-left:5px;margin-top:5px;padding:0}.select2-container--classic .select2-selection--multiple .select2-selection__choice__display{cursor:default;padding-left:2px;padding-right:5px}.select2-container--classic .select2-selection--multiple .select2-selection__choice__remove{background-color:transparent;border:none;border-top-left-radius:4px;border-bottom-left-radius:4px;color:#888;cursor:pointer;font-size:1em;font-weight:bold;padding:0 4px}.select2-container--classic .select2-selection--multiple .select2-selection__choice__remove:hover{color:#555;outline:none}.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice{margin-left:5px;margin-right:auto}.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice__display{padding-left:5px;padding-right:2px}.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:4px;border-bottom-right-radius:4px}.select2-container--classic.select2-container--open .select2-selection--multiple{border:1px solid #5897fb}.select2-container--classic.select2-container--open.select2-container--above .select2-selection--multiple{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.select2-container--classic.select2-container--open.select2-container--below .select2-selection--multiple{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.select2-container--classic .select2-search--dropdown .select2-search__field{border:1px solid #aaa;outline:0}.select2-container--classic .select2-search--inline .select2-search__field{outline:0;box-shadow:none}.select2-container--classic .select2-dropdown{background-color:#fff;border:1px solid transparent}.select2-container--classic .select2-dropdown--above{border-bottom:none}.select2-container--classic .select2-dropdown--below{border-top:none}.select2-container--classic .select2-results>.select2-results__options{max-height:200px;overflow-y:auto}.select2-container--classic .select2-results__option--group{padding:0}.select2-container--classic .select2-results__option--disabled{color:grey}.select2-container--classic .select2-results__option--highlighted.select2-results__option--selectable{background-color:#3875d7;color:#fff}.select2-container--classic .select2-results__group{cursor:default;display:block;padding:6px}.select2-container--classic.select2-container--open .select2-dropdown{border-color:#5897fb}
+			</style>
+			{/literal}
+			
+			{literal}
+				<script>	
+					
+					window.addEventListener('oc_plugins_loaded', function (e) {
+						var setOptInterval = setInterval(function(){
+							if(typeof $.storequickorder.setOptions != "undefined"){
+								
+								function recalcPrice(){
+									var left_price = $('div.pick_params_left').find('select').last().find('option:selected').data('price');
+									var right_price = $('div.pick_params_right').find('select').last().find('option:selected').data('price');
+									var serv_price = 0;
+									$("select.service-variants:not([disabled]) option:selected").each(function(){serv_price = serv_price + parseInt($(this).data('price'))});
+									
+									if(typeof left_price === "undefined"){left_price = 0}
+									if(typeof right_price === "undefined"){right_price = 0}
+									if(typeof serv_price === "undefined"){serv_price = 0}
+									
+									var calcPrice = parseInt(left_price) + parseInt(right_price) + parseInt(serv_price);
+									var price_str = calcPrice + ' <span class="ruble">Р</span>';
+									$('#cart-form .price.nowrap').attr('data-price',calcPrice).html(price_str);
+								}
+								// add to cart block: services
+								$(".services input[type=checkbox]").click(function () {
+									var obj = $('select[name="service_variant[' + $(this).val() + ']"]');
+									if (obj.length) {
+										if ($(this).is(':checked')) {
+											obj.removeAttr('disabled');
+											recalcPrice();
+										} else {
+											obj.attr('disabled', 'disabled');
+											recalcPrice();
+										}
+									}
+								});
+								
+								$("select.service-variants").each(function(){
+									if($(this).find("option:selected").data('price') == 0){
+										$(this).parent().find("input[type=checkbox]").click();
+									}
+								});
+								
+								$("select.service-variants").on("change",function(){
+									
+								});
+								
+								$('#cart-form select:not(.service-variants)').select2({selectOnClose: true,width: 'resolve',placeholder: 'Выберите значение'});
+								
+								$('body').on('change','#cart-form select',function(){
+									
+									var changedElem = $(this);
+									var changedWrapper = $(this).parent("div.pick_params");
+									var duplicateWrapper = $("div.pick_params.pick_params_right");									
+									var checkedFlag = $('#duplicate:checked').length;																									  
+									var left_keys = ["L_index","L_material","L_design","L_features"];
+									var right_keys = ["R_index","R_material","R_design","R_features"];
+									var call = $(this).data('call');
+									var interactToCall = {"index":"material","material":"design","design":"features",}
+									var fnameDecode = {"L_index":"Индекс","R_index":"Индекс","L_material":"Материал","R_material":"Материал","L_design":"Дизайн","R_design":"Дизайн"}
+									
+									/*сначала удалять лишние поля, потом собирать данные!!!*/
+									if(call == "features" || call == "material" || call == "design"){
+										$(changedElem).next().nextAll().remove();
+									}
+									
+									var formData = $('#cart-form').serializeArray();
+									
+									
+									/*если есть галка и идет взаимодействие с полями левой линзы*/
+									if(checkedFlag == 1 && $(changedWrapper).hasClass("pick_params_left")){
+										var duplicate_flag = true;
+										duplicateElemName = $(changedElem).attr("name").replace("L_","R_");
+										$(duplicateWrapper).find("select[name="+duplicateElemName+"]").val($(changedElem).val()).change();
+										
+									}else{
+										var duplicate_flag = false;
+									}
+									formData.push({name: "interact", value: $(this).attr('interact')});
+									$.post('/lenscalc/sqcalc/', formData, function(jData) {						
+										if(jData.status == 'ok') {
+											/*build HTML*/
+											/*check element exist*//*add element or compare data, and optionally update fields*/
+											$.each(jData.data,function(key,val){
+												if(key == "L_features" || key == "R_features"){/*multiple-field interaction*/
+													if(($(changedWrapper).hasClass('pick_params_left') && $.inArray(key,left_keys) > 0) || ($(changedWrapper).hasClass('pick_params_right') && $.inArray(key,right_keys) > 0)){
+														if($(changedWrapper).hasClass('pick_params_left')){var prefix = "L_"}else{var prefix = "R_"}
+														/*added .next() to prevent deleting added select2 element*/
+														$(changedElem).next().nextAll().remove();
+														$.each(val,function(k,v){
+															var selectHtml = '<span>'+v['feature']+'</span><select name="'+prefix + v['feature']+'"><option></option>';
+															if(parseFloat(v['val_from']) < parseFloat(v['val_to'])){
+																for(i = parseFloat(v['val_from']); i <= parseFloat(v['val_to']); i=i+parseFloat(v['val_step'])){
+																	if(v['val_to'].charAt(0) == "+" && i > 0){
+																		selectHtml += "<option data-price ="+v['price']+">'+'"+i+"</option>";
+																	}else{
+																		selectHtml += "<option data-price ="+v['price']+">"+i+"</option>";
+																	}	
+																}
+															}else{
+																for(i = parseFloat(v['val_to']); i <= parseFloat(v['val_from']); i=i+parseFloat(v['val_step'])){
+																	if(v['val_from'].charAt(0) == "+" && i > 0){
+																		selectHtml += "<option data-price ="+v['price']+">+"+i+"</option>";
+																	}else{
+																		selectHtml += "<option data-price ="+v['price']+">"+i+"</option>";
+																	}	
+																}
+															}
+															selectHtml += '</select>';
+															changedWrapper.append(selectHtml);
+															changedWrapper.find("select").last().select2({selectOnClose: true,width: 'resolve',placeholder: 'Выберите значение'});
+														});
+													}
+												}else{/*single-field interaction*/
+													if($(changedWrapper).find("select[name="+key+"]").length > 0){														
+														$(changedWrapper).find("select[name="+key+"]").html('').append("<option></option>").nextAll().remove();
+														$.each(val,function(k,v){
+															$(changedWrapper).find("select[name="+key+"]").append("<option>"+v[call]+"</option>");
+														});
+														changedWrapper.find("select").last().select2({selectOnClose: true,width: 'resolve',placeholder: 'Выберите значение'});
+														
+													}else{
+														if(($(changedWrapper).hasClass('pick_params_left') && $.inArray(key,left_keys) > 0) || ($(changedWrapper).hasClass('pick_params_right') && $.inArray(key,right_keys) > 0)){
+															var selectHtml = '<span>'+fnameDecode[key]+'</span><select name="'+key+'" interact="'+call+'" data-call="'+interactToCall[call]+'"><option></option></select>';
+															changedWrapper.append(selectHtml);
+															$.each(val,function(k,v){
+																$(changedWrapper).find("select[name="+key+"]").append("<option>"+v[call]+"</option>");
+															});
+															changedWrapper.find("select").last().select2({selectOnClose: true,width: 'resolve',placeholder: 'Выберите значение'});
+														}
+													}
+												}	
+											});
+											/*price*/
+											recalcPrice();
+										}else {
+											alert('ivalid data');
+										}
+									}, 'json');
+								});								
+								clearInterval(setOptInterval);
+							}
+						}, 500);
+					});
+					
+				</script>
+			{/literal}
+            <i class="adding2cart"></i>
+        </div>
+    </div>
+</form>
+
+{else}
+<span>Для использования калькулятора необходимо зарегистрироваться или авторизоваться</span>
+{/if}
